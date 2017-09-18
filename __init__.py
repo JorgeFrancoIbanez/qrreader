@@ -65,28 +65,37 @@ import os
 import shutil
 import zbar
 import subprocess
+import argparse
 
-def createQRCodeVideoExampleLeftToRight():
+def createQRCodeVideoExampleLeftToRight(base_dir, img_dir, newImage=0):
+    print base_dir, ' ', img_dir
+    # create a video file from an image
+    img = cv2.imread(img_dir, 0)
+    # img = cv2.imread('sources/qrcode/qr.jpg', 0)
+    rows, cols = img.shape
     # Delete old files images
-    if os.path.exists('gif'):
-        shutil.rmtree('gif')
-    os.makedirs('gif')
-    cont = 0
+    if newImage:
+        if os.path.exists(base_dir+'sources/gif'):
+            shutil.rmtree(base_dir+'sources/gif')
+        os.makedirs(base_dir+'sources/gif')
+        cont = 0
 
-    # Move the qr.jpg from left to right
-    for i in range(0, 1210, 1):
-        M = np.float32([[1, 0, i], [0, 1, (rows+700)/2]])
-        dst = cv2.warpAffine(img, M, (cols+1200, rows+700))
+        # Move the qr.jpg from left to right
+        for i in range(0, 1210, 1):
+            M = np.float32([[1, 0, i], [0, 1, (rows+700)/2]])
+            dst = cv2.warpAffine(img, M, (cols+1200, rows+700))
 
 
-        # window = cv2.imshow('img', dst)
-        cv2.waitKey(1)
-        cv2.imwrite('gif/img'+str(cont).zfill(3)+'.jpg', dst)
-        # cv2.destroyAllWindows()
+            # window = cv2.imshow('img', dst)
+            cv2.waitKey(1)
+            cv2.imwrite(base_dir+'sources/gif/img'+str(cont).zfill(3)+'.jpg', dst)
+            # cv2.destroyAllWindows()
         cont+=1
-    bashCommand = "ffmpeg -framerate 60 -i gif/img%03d.jpg output.mp4"
-    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-    output, error = process.communicate()
+    if not os.path.isfile(base_dir+'sources/output.mp4'):
+        print 'output file not found:'
+        bashCommand = 'ffmpeg -framerate 60 -i '+base_dir+'sources/gif/img%03d.jpg '+base_dir+'sources/output.mp4'
+        process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+        output, error = process.communicate()
 
 
 def scanner_procces(frame, set_zbar, i):
@@ -116,45 +125,41 @@ def scanner_procces(frame, set_zbar, i):
     set_zbar.scan(image)
 
     for symbol in image:
-        print '\033[1;32mResult : %s symbol "%s" \033[1;m' % (symbol.type, symbol.data), i
-        # print 'AQUI SE LLAMARIA A LA OPCION DE RECONOCER EL VEHICULO CON ESTE FRAME'
+        if i == 400:
+            print '\033[1;32mResult : %s symbol "%s" \033[1;m' % (symbol.type, symbol.data), i
+            # print 'AQUI SE LLAMARIA A LA OPCION DE RECONOCER EL VEHICULO CON ESTE FRAME'
+
+            # Buscando el metodo de conversionde frame a img
+            cv2.imwrite('frame.png', frame)
+
+            a = True
+            # move()
         a = True
-        # move()
 
     #display
-    cv.ShowImage("webcame", frame)
+    # cv.ShowImage("webcame", frame)
     # cv.ShowImage("webcame2", get_sub)
     cv.WaitKey(10)
     return a
 
-
-
-if __name__ == "__main__":
+def main(base_dir):
     # # set up our stuff
-    i=1
+    i = 1
+    # set Window Image
+    # cv.NamedWindow("webcame", cv.CV_WINDOW_AUTOSIZE)
+    capture = cv.CaptureFromFile(base_dir+'sources/output.mp4')  # Lectura de un video por frame
 
-    #create a video file from an image
-    img = cv2.imread('qr.jpg', 0)
-    rows, cols = img.shape
-    createQRCodeVideoExampleLeftToRight()
-
-    #set Window Image
-    cv.NamedWindow("webcame", cv.CV_WINDOW_AUTOSIZE)
-
-    capture = cv.CaptureFromFile('output.mp4')     # Lectura de un video por frame
     # capture = cv.CaptureFromCAM(-1)    # Lectura de la camara
 
 
-    #creation of the reader
+    # creation of the reader
     set_zbar = zbar.ImageScanner()
 
     while True:
-        #Captura los frames de la fuente del video. Video o Captura de camara.
+        # Captura los frames de la fuente del video. Video o Captura de camara.
         frame = cv.QueryFrame(capture)
-        #Si No Hay mas frames sale del programa
+        # Si No Hay mas frames sale del programa
         if not frame:
             exit()
         if scanner_procces(frame, set_zbar, i):
             i += 1
-
-
