@@ -58,7 +58,6 @@
 
 
 
-import cv2.cv as cv  # Use OpenCV-2.4.3
 import cv2
 import numpy as np
 import os
@@ -123,7 +122,8 @@ def scanner_procces(frame, set_zbar, i):
     #Create the scanner
     image = zbar.Image(cm_im.width, cm_im.height, 'Y800', cm_im.tostring())
     set_zbar.scan(image)
-
+    print "adsasd"
+    print image.symbol
     for symbol in image:
         if i == 400:
             print '\033[1;32mResult : %s symbol "%s" \033[1;m' % (symbol.type, symbol.data), i
@@ -142,24 +142,25 @@ def scanner_procces(frame, set_zbar, i):
     cv.WaitKey(10)
     return a
 
-def main(base_dir):
+
     # # set up our stuff
-    i = 1
+#    i = 1
     # set Window Image
     # cv.NamedWindow("webcame", cv.CV_WINDOW_AUTOSIZE)
-    capture = cv.CaptureFromFile(base_dir+'sources/output.mp4')  # Lectura de un video por frame
+frame = cv2.imread("/home/jfranco/Documents/13CCC/qrs/SUO/153015.png")  # Lectura de un video por frame
 
     # capture = cv.CaptureFromCAM(-1)    # Lectura de la camara
 
 
     # creation of the reader
-    set_zbar = zbar.ImageScanner()
+set_zbar = zbar.ImageScanner()
 
-    while True:
+#    while True:
         # Captura los frames de la fuente del video. Video o Captura de camara.
-        frame = cv.QueryFrame(capture)
+        #frame = cv.QueryFrame(capture)
         # Si No Hay mas frames sale del programa
-        if not frame:
-            exit()
-        if scanner_procces(frame, set_zbar, i):
-            i += 1
+#        if not frame:
+ #           exit()
+print "asdasdsadsad"
+scanner_procces(frame, set_zbar, 1)
+        #    i += 1
