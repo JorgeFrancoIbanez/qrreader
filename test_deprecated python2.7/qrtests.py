@@ -29,7 +29,7 @@ scanner.parse_config('enable')
 # loop over the frames from the video stream
 # grab the frame from the threaded video stream and resize it
 # to have a maximum width of 400 pixels
-#frame = VideoStream("/home/jfranco/Documents/13CCC/qrs/BLUR/gif.gif", 1 );
+frame = VideoStream("/home/jfranco/Documents/13CCC/qrs/BLUR/gif.gif", 1 )
 #frame = cv2.imread("/home/jfranco/Documents/13CCC/qrs/BLUR/gif.gif", 1 );
 frame = imutils.resize(frame, width=400)
 #QR code recognition
@@ -40,7 +40,7 @@ raw = pil.tobytes()
 image = zbar.Image(width, height, 'Y800', raw)
 scanner.scan(image)
 for symbol in image:
-	print 'decoded', symbol.type, 'symbol', '"%s"' % symbol.data
+	print ('decoded', symbol.type, 'symbol', '"%s"' % symbol.data)
 	# draw the timestamp on the frame
 timestamp = datetime.datetime.now()
 ts = timestamp.strftime("%A %d %B %Y %I:%M:%S%p")

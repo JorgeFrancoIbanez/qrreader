@@ -41,7 +41,7 @@ while True:
         scanner.scan(image)
 	
         for symbol in image:
-                print 'decoded', symbol.type, 'symbol', '"%s"' % symbol.data
+                print ('decoded', symbol.type, 'symbol', '"%s"' % symbol.data)
 
 	# draw the timestamp on the frame
         timestamp = datetime.datetime.now()
