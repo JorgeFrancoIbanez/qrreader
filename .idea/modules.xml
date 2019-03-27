@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Flask-api/.idea/Flask-api.iml" filepath="$PROJECT_DIR$/../Flask-api/.idea/Flask-api.iml" />
+      <module fileurl="file://$USER_HOME$/PycharmProjects/Glance-Migrator/.idea/Glance-Migrator.iml" filepath="$USER_HOME$/PycharmProjects/Glance-Migrator/.idea/Glance-Migrator.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/qrreader.iml" filepath="$PROJECT_DIR$/.idea/qrreader.iml" />
     </modules>
   </component>
